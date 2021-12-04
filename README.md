@@ -1,2 +1,2 @@
 # college system
- my first projecy
+ my first projecy and repositories
