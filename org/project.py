@@ -49,12 +49,24 @@ def cadunico():
 
 
 def adminscreen():
+    
     print("Bem vindo a screen do administrador")
     print("Admin Screen")
     print("(1) Cadastrar professor")
     print("(2) Aprovar matriculas")
     escolha = int(input(""))
-    
+    #Fazer com que as escolhas levem a outras funções, como Cadprof()
+    if escolha == 1:
+        print("Entre com os dados cadastrais do professor")
+        name = input("Nome do professor: ")
+        idade = int(input("Idade do professor: "))
+        materia = input("Matéria a ser oferecida: ")
+        turmas = input("Turmas responsaveis: ")
+        password = input("Password: ")
+
+        if name == '' or idade =='' or materia =='' or turmas =='' or password =='':
+            print("Todos os campos devem ser preenchidos")
+            return adminscreen()
     if escolha == 2:
         query = "SELECT insun, id , name, sunname, email, phone, agr, address FROM parents"
         cursor.execute(query)
@@ -110,7 +122,7 @@ def adminscreen():
  
                     cursor.execute(query2, values2)
                     db.commit()
-                    print(cursor.rowcount, "record inserted")
+                    print(cursor.rowcount, "record inserted") 
             
             
                 
