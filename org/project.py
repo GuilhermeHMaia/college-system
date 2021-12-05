@@ -93,13 +93,24 @@ def adminscreen():
                 if escolha == 1:
                     turma =input("Informe a turma ao qual o aluno será matriculado: ")
                     print(turma)
-                    """query2 = "UPDATE parents SET insun = %s WHERE id = %s"
+
+
+                    query3 = "UPDATE student SET turma = %s WHERE id = %s"
+                
+                    values3 = (turma,inc)
+ 
+                    cursor.execute(query3, values3)
+                    db.commit()
+                    print(cursor.rowcount, "record inserted")
+
+
+                    query2 = "UPDATE parents SET insun = %s WHERE id = %s"
                 
                     values2 = (inc,inc)
-
+ 
                     cursor.execute(query2, values2)
                     db.commit()
-                    print(cursor.rowcount, "record inserted")"""
+                    print(cursor.rowcount, "record inserted")
             
             
                 
