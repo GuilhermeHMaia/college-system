@@ -63,6 +63,7 @@ def adminscreen():
         for linha in record:
             
             if None in linha:
+                print("\nFICHA CADASTRAL PARENTS")
                 print("id: ", linha[1])
                 print("Nome: ", linha[2])
                 print("Sun name: ", linha[3])
@@ -72,16 +73,33 @@ def adminscreen():
                 print("Address: ", linha[7])
                 inc = linha[1]
 
-                
-                
+                query = "SELECT * FROM student WHERE id = %s"
+                values2 = (inc,)
+                cursor.execute(query, values2)
+                record2 = cursor.fetchall()
+                aluno = record2[0]
+                print("\nFICHA CADASTRAL SUN")
+                print("id: ", aluno[0])
+                print("name: ", aluno[1])
+                print("parents name: ", aluno[2])
+                print("address: ", aluno[3])
+                print("Birth: ", aluno[4])
+                print("age: ", aluno[5])
+                print("parents phone: ", aluno[6])
+                print("parents email: ", aluno[7])
 
-                """query2 = "UPDATE parents SET insun = %s WHERE id = %s"
+                print("\nAprovar matricula")
+                escolha = int(input("(1) Yes or (2) Not"))
+                if escolha == 1:
+                    turma =input("Informe a turma ao qual o aluno será matriculado: ")
+                    print(turma)
+                    """query2 = "UPDATE parents SET insun = %s WHERE id = %s"
                 
-                values2 = (inc,inc)
+                    values2 = (inc,inc)
 
-                cursor.execute(query2, values2)
-                db.commit()
-                print(cursor.rowcount, "record inserted")"""
+                    cursor.execute(query2, values2)
+                    db.commit()
+                    print(cursor.rowcount, "record inserted")"""
             
             
                 
