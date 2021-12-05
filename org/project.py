@@ -1,5 +1,7 @@
+
 import mysql.connector as mysql
 from datetime import date
+import random
 
 db = mysql.connect(host = "localhost",
                    user = "root",
@@ -38,15 +40,47 @@ def cadunico():
 
 
 def adminscreen():
-    print("Bem vindo a screen do administrados")
+    print("Bem vindo a screen do administrador")
+    print("Admin Screen")
+    print("(1) Cadastrar professor")
+    print("(2) Aprovar matriculas")
+    escolha = int(input(""))
     
+    if escolha == 2:
+        query = "SELECT insun, id , name, sunname, email, phone, agr, address FROM parents"
+        cursor.execute(query)
+        record = cursor.fetchall()
+
+        for linha in record:
+            
+            if None in linha:
+                print("id: ", linha[1])
+                print("Nome: ", linha[2])
+                print("Sun name: ", linha[3])
+                print("Email: ", linha[4])
+                print("Phone: ", linha[5])
+                print("Age: ", linha[6])
+                print("Address: ", linha[7])
+                inc = linha[1]
+                
+
+                query2 = "UPDATE parents SET insun = %s WHERE id = %s"
+                
+                values2 = (inc,inc)
+
+                cursor.execute(query2, values2)
+                db.commit()
+                print(cursor.rowcount, "record inserted")
+                
+
+
 
 def login():
     print("Faça o login no sistema")
     nome = input("Digite seu nome: ")
     password = input("Digite sua senha: ")
 
-    if nome == "Administrados" and password == "2121":
+    if nome == "Administrador" and password == "2121":
         return adminscreen()
 
 def inicio():

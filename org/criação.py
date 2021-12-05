@@ -42,8 +42,9 @@ db = mysql.connect(
 
 cursor = db.cursor()
 
-cursor.execute("CREATE TABLE parents(name VARCHAR(255), sunname VARCHAR(255), email VARCHAR(255), phone INT(11), agr INT(11), address VARCHAR(255), password VARCHAR(255), insun INT(11))")
-"""
+#cursor.execute("CREATE TABLE parents(name VARCHAR(255), sunname VARCHAR(255), email VARCHAR(255), phone INT(11), agr INT(11), address VARCHAR(255), password VARCHAR(255), insun INT(11))")
+cursor.execute("ALTER TABLE parents ADD COLUMN id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST")
+cursor.execute("DESC parents")"""
 
 
 #Criação da Table professor
