@@ -1,7 +1,7 @@
 
 import mysql.connector as mysql
 from datetime import date
-import random
+from datetime import date
 
 db = mysql.connect(host = "localhost",
                    user = "root",
@@ -19,6 +19,7 @@ def cadunico():
     address = input("address: ")
     sunname = input("Sun name: ")
     birth = input("Sun birth: ")
+    sunage = int(input("Sun age: "))
     password = input("passaword: ")
     sunpass = input("Sun password")
     nome = nome.title()
@@ -31,6 +32,14 @@ def cadunico():
     values = (nome, sunname, email, phone, age, address, password)
 
     cursor.execute(query, values)
+    db.commit()
+    print(cursor.rowcount, "record inserted")
+
+    
+    query2 = "INSERT INTO student(name, namepais, addres, birth, age, telpais, emailpais, password) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"
+    values2 = (sunname, nome, address, birth,sunage, phone, email, sunpass)
+
+    cursor.execute(query2, values2)
     db.commit()
     print(cursor.rowcount, "record inserted")
 
@@ -62,15 +71,19 @@ def adminscreen():
                 print("Age: ", linha[6])
                 print("Address: ", linha[7])
                 inc = linha[1]
+
+                
                 
 
-                query2 = "UPDATE parents SET insun = %s WHERE id = %s"
+                """query2 = "UPDATE parents SET insun = %s WHERE id = %s"
                 
                 values2 = (inc,inc)
 
                 cursor.execute(query2, values2)
                 db.commit()
-                print(cursor.rowcount, "record inserted")
+                print(cursor.rowcount, "record inserted")"""
+            
+            
                 
 
 
