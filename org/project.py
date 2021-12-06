@@ -68,7 +68,7 @@ def adminscreen():
         if name == '' or idade =='' or materia =='' or turmas =='' or password =='':
             print("Todos os campos devem ser preenchidos")
             return adminscreen()
-        query4 = "INSERT INTO teacher(name, agr, password, formacao, email, turma) VALUES(%s, %s, %s, %s, %s, %s) "
+        query4 = "INSERT INTO teacher(name, age, password, formacao, email, turma) VALUES(%s, %s, %s, %s, %s, %s) "
         values4 = (name, idade, password, materia, email, turmas)
 
         cursor.execute(query4, values4)
@@ -142,7 +142,7 @@ def screenstudent(nome):
 def screenteacher(nome):
     #coisas como, adicionar nota, presença, avisos, data de provas, consultar ficha de aluno
     print("Welcome the teacher screen")   
-    print("  Olá ", nome "  ")
+    print("  Olá ", nome)
     print("(1) Adicionar aviso")
     print("(2) Adiconar notas")
     print("(3) Adicionar data de provas")
@@ -150,7 +150,7 @@ def screenteacher(nome):
     print("(5) Consultar ficha de aluno")
     choise = int(input(""))
 
-    
+
 
               
 
@@ -161,31 +161,37 @@ def login():
     nome = input("Digite seu nome: ")
     password = input("Digite sua senha: ")
     print("Escolhar uma permição")
-    fun = input("(1) Student or (2) teacher or (3) Parents")
+    fun = int(input("(1) Student or (2) teacher or (3) Parents"))
 
     if nome == "Administrador" and password == "2121":
         return adminscreen()
 
-""" if fun == 1:
+    if fun == 1:
         query = "SELECT name, password FROM student"
         cursor.execute(query)
         record= cursor.fetchall()
 
         for linha in record:
-            if nome = linha[0]:
+            if nome == linha[0]:
                 if linha[1] == password:
                     return screenstudent(nome)
 
     if fun == 2:
         query2 = "SELECT name, password FROM teacher"
-        cursor.execute(query)
+        cursor.execute(query2)
         record2 = cursor.fetchall()
 
         for linha in record2:
-            if nome = linha[0]:
-                if linha[1] == passowrd:
+            if nome == linha[0]:
+                if linha[1] == password:
                     return screenteacher(nome)
-            """
+                else:
+                    print("Senha errada")
+                    return login()
+            else:
+                print("Nome não encontrado")
+                return login()
+            
 
 def inicio():
     print("Bem vindo ao sistema escolar")
