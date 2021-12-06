@@ -26,7 +26,7 @@ def cadunico():
     sunname = sunname.title()
     if nome=='' or email=='' or phone =='' or age=='' or address=='' or sunname=='' or birth=='' or password=='' or sunpass=='':
         print("Todos os campos devem ser preenchidos")
-        return cadunico
+        return cadunico()
 
     query = "INSERT INTO parents(name, sunname, email, phone, agr, address, password) VALUES(%s, %s, %s, %s, %s, %s, %s)"
     values = (nome, sunname, email, phone, age, address, password)
@@ -60,6 +60,7 @@ def adminscreen():
         print("Entre com os dados cadastrais do professor")
         name = input("Nome do professor: ")
         idade = int(input("Idade do professor: "))
+        email = input("email teacher: ")
         materia = input("Matéria a ser oferecida: ")
         turmas = input("Turmas responsaveis: ")
         password = input("Password: ")
@@ -67,6 +68,15 @@ def adminscreen():
         if name == '' or idade =='' or materia =='' or turmas =='' or password =='':
             print("Todos os campos devem ser preenchidos")
             return adminscreen()
+        query4 = "INSERT INTO teacher(name, agr, password, formacao, email, turma) VALUES(%s, %s, %s, %s, %s, %s) "
+        values4 = (name, idade, password, materia, email, turmas)
+
+        cursor.execute(query4, values4)
+        db.commit()
+        print(cursor.rowcount, "record inserted")
+
+
+
     if escolha == 2:
         query = "SELECT insun, id , name, sunname, email, phone, agr, address FROM parents"
         cursor.execute(query)
@@ -123,9 +133,26 @@ def adminscreen():
                     cursor.execute(query2, values2)
                     db.commit()
                     print(cursor.rowcount, "record inserted") 
-            
-            
-                
+
+
+def screenstudent(nome):   
+    print("Welcome the student screen")
+    # coisas como, ver nota, com desempenho, ver presença, avisos, data das provas, horário aulas.
+
+def screenteacher(nome):
+    #coisas como, adicionar nota, presença, avisos, data de provas, consultar ficha de aluno
+    print("Welcome the teacher screen")   
+    print("  Olá ", nome "  ")
+    print("(1) Adicionar aviso")
+    print("(2) Adiconar notas")
+    print("(3) Adicionar data de provas")
+    print("(4) Adiconar presença")
+    print("(5) Consultar ficha de aluno")
+    choise = int(input(""))
+
+    
+
+              
 
 
 
@@ -133,9 +160,32 @@ def login():
     print("Faça o login no sistema")
     nome = input("Digite seu nome: ")
     password = input("Digite sua senha: ")
+    print("Escolhar uma permição")
+    fun = input("(1) Student or (2) teacher or (3) Parents")
 
     if nome == "Administrador" and password == "2121":
         return adminscreen()
+
+""" if fun == 1:
+        query = "SELECT name, password FROM student"
+        cursor.execute(query)
+        record= cursor.fetchall()
+
+        for linha in record:
+            if nome = linha[0]:
+                if linha[1] == password:
+                    return screenstudent(nome)
+
+    if fun == 2:
+        query2 = "SELECT name, password FROM teacher"
+        cursor.execute(query)
+        record2 = cursor.fetchall()
+
+        for linha in record2:
+            if nome = linha[0]:
+                if linha[1] == passowrd:
+                    return screenteacher(nome)
+            """
 
 def inicio():
     print("Bem vindo ao sistema escolar")
