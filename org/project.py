@@ -170,10 +170,27 @@ def screenteacher(nome):
     print("(6) Exit")
     choise = int(input(""))
 
-    #Avisos, usar id, data, e campo de avisos
+    if choise == 2:
+        turma = input("Escolha a turma: ")
 
     if choise == 1:
         return avisos()
+
+    if choise == 5:
+        query2 = "SELECT * FROM student"
+        cursor.execute(query2)
+        record = cursor.fetchall()
+        aluno = int(input("Digite o id do aluno:"))
+        for linha in record:
+            if linha[0] == aluno:
+                print("Id: ", linha[0])
+                print("Aluno: ", linha[1])
+                print("Parents: ", linha[2])
+                print("Address: ", linha[3])
+                print("Birth: ", linha[4])
+                print("Age: ", linha[5])
+                print("Contato: ", linha[6])
+                print("Turma: ", linha[8])
 
     if choise == 6:
         breakpoint
