@@ -2,6 +2,7 @@
 import mysql.connector as mysql
 from datetime import date
 from datetime import date
+import getpass
 
 db = mysql.connect(host = "localhost",
                    user = "root",
@@ -11,7 +12,7 @@ db = mysql.connect(host = "localhost",
 cursor = db.cursor()
 
 def cadunico():
-    print("Preencha os campos a seguir com seus dados e os dados do seu filho")
+    print("\nPreencha os campos a seguir com seus dados e os dados do seu filho")
     nome = input("Full name: ")
     email = input("Email: ")
     phone = int(input("Phone: "))
@@ -20,8 +21,8 @@ def cadunico():
     sunname = input("Sun name: ")
     birth = input("Sun birth: ")
     sunage = int(input("Sun age: "))
-    password = input("passaword: ")
-    sunpass = input("Sun password")
+    password = getpass.getpass("passaword: ")
+    sunpass = getpass.getpass("Sun password")
     nome = nome.title()
     sunname = sunname.title()
     if nome=='' or email=='' or phone =='' or age=='' or address=='' or sunname=='' or birth=='' or password=='' or sunpass=='':
@@ -50,20 +51,20 @@ def cadunico():
 
 def adminscreen():
     
-    print("Bem vindo a screen do administrador")
-    print("Admin Screen")
+    
+    print("\nADMINSCREEN")
     print("(1) Cadastrar professor")
     print("(2) Aprovar matriculas")
     escolha = int(input(""))
     #Fazer com que as escolhas levem a outras funções, como Cadprof()
     if escolha == 1:
-        print("Entre com os dados cadastrais do professor")
+        print("\nEntre com os dados cadastrais do professor")
         name = input("Nome do professor: ")
         idade = int(input("Idade do professor: "))
         email = input("email teacher: ")
         materia = input("Matéria a ser oferecida: ")
         turmas = input("Turmas responsaveis: ")
-        password = input("Password: ")
+        password = getpass.getpass("Password: ")
 
         if name == '' or idade =='' or materia =='' or turmas =='' or password =='':
             print("Todos os campos devem ser preenchidos")
@@ -134,21 +135,48 @@ def adminscreen():
                     db.commit()
                     print(cursor.rowcount, "record inserted") 
 
+    print("Não há mais pedidos de matricula")
+    return adminscreen()
+
 
 def screenstudent(nome):   
-    print("Welcome the student screen")
+    print("\nWelcome the student screen")
     # coisas como, ver nota, com desempenho, ver presença, avisos, data das provas, horário aulas.
+
+def avisos():
+    print("\nDigite seu aviso!")
+    aviso = input(":")
+    data = date.today()
+    #data = str(mu)
+
+    print(aviso)
+    print(data)
+    query = "INSERT INTO avisos(data, aviso) VALUES ( %s, %s)"
+    values = (data, aviso)
+
+    cursor.execute(query, values)
+    db.commit()
+    print(cursor.rowcount, "Record inserted")
 
 def screenteacher(nome):
     #coisas como, adicionar nota, presença, avisos, data de provas, consultar ficha de aluno
-    print("Welcome the teacher screen")   
+    print("\nWelcome the teacher screen")   
     print("  Olá ", nome)
     print("(1) Adicionar aviso")
     print("(2) Adiconar notas")
     print("(3) Adicionar data de provas")
     print("(4) Adiconar presença")
     print("(5) Consultar ficha de aluno")
+    print("(6) Exit")
     choise = int(input(""))
+
+    #Avisos, usar id, data, e campo de avisos
+
+    if choise == 1:
+        return avisos()
+
+    if choise == 6:
+        breakpoint
 
 
 
@@ -157,9 +185,9 @@ def screenteacher(nome):
 
 
 def login():
-    print("Faça o login no sistema")
+    print("\nFaça o login no sistema")
     nome = input("Digite seu nome: ")
-    password = input("Digite sua senha: ")
+    password = getpass.getpass("Digite sua senha: ")
     print("Escolhar uma permição")
     fun = int(input("(1) Student or (2) teacher or (3) Parents"))
 
