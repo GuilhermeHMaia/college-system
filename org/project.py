@@ -115,6 +115,8 @@ def adminscreen():
                 escolha = int(input("(1) Yes or (2) Not"))
                 if escolha == 1:
                     turma =input("Informe a turma ao qual o aluno será matriculado: ")
+                    turma = turma.upper()
+                    turma = turma.replace(' ', '')
                     print(turma)
 
 
@@ -158,7 +160,39 @@ def avisos():
     db.commit()
     print(cursor.rowcount, "Record inserted")
 
-def screenteacher(nome):
+def nota(materia):
+    # escolha da turma, filtragem com nome e id,nota, data que a prova foi aplicada e sequência da prova ( primeira, segunda), comentario?
+    turma = input("\nEscolha uma turma: ")
+    prova = input("Digite o dia em que a prova foi aplicada")
+    sequen = input("Digite a ordem da prova, (Primeira, Segunda ...")
+    turma = turma.upper()
+    turma = turma.replace(' ', '')
+    print(turma)
+    query = "SELECT name, id FROM student WHERE turma = %s"
+    values = (turma, )
+
+    cursor.execute(query, values)
+    record = cursor.fetchall()
+    for linha in record:
+        print("Aluno: ", linha[0])
+        nota = int(input("Digite a nota do aluno :"))
+        comentário = input("Digite um comentário: ")
+        aluno = str(linha[0])
+        mat = int(linha[1])
+    
+    query2 = "INSERT INTO notas (id, data, name, nota, sequencia, turma, materia, comentario) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"
+    values2 = (mat, prova, aluno, nota, sequen, turma, materia, comentário)
+
+    cursor.execute(query2, values2)
+    db.commit()
+    print(cursor.rowcount, "Record inserted")
+
+    
+
+
+    
+
+def screenteacher(nome, formacao):
     #coisas como, adicionar nota, presença, avisos, data de provas, consultar ficha de aluno
     print("\nWelcome the teacher screen")   
     print("  Olá ", nome)
@@ -171,7 +205,7 @@ def screenteacher(nome):
     choise = int(input(""))
 
     if choise == 2:
-        turma = input("Escolha a turma: ")
+        return nota(formacao)
 
     if choise == 1:
         return avisos()
@@ -222,14 +256,15 @@ def login():
                     return screenstudent(nome)
 
     if fun == 2:
-        query2 = "SELECT name, password FROM teacher"
+        query2 = "SELECT name, password, formacao FROM teacher"
         cursor.execute(query2)
         record2 = cursor.fetchall()
 
         for linha in record2:
             if nome == linha[0]:
                 if linha[1] == password:
-                    return screenteacher(nome)
+                    formacao = linha[2]
+                    return screenteacher(nome, formacao)
                 else:
                     print("Senha errada")
                     return login()
