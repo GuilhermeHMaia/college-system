@@ -82,7 +82,7 @@ cursor = db.cursor()
 cursor.execute("ALTER TABLE avisos ADD COLUMN id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST")
 cursor.execute("DESC teacher")"""
 
-import mysql.connector as mysql
+"""import mysql.connector as mysql
 
 db = mysql.connect(
     host = "localhost",
@@ -95,4 +95,17 @@ cursor = db.cursor()
 
 #cursor.execute("CREATE TABLE notas(id INT(11), data VARCHAR(255), name VARCHAR(255), nota VARCHAR(255), sequencia VARCHAR(255), turma VARCHAR(255))")
 cursor.execute("ALTER TABLE notas ADD COLUMN comentario VARCHAR(255)")
-cursor.execute("DESC teacher")
+cursor.execute("DESC teacher")"""
+
+import mysql.connector as mysql
+
+db = mysql.connect(
+    host = "localhost",
+    user = "root",
+    passwd = "",
+    database = "school"
+    )
+
+cursor = db.cursor()
+
+cursor.execute("CREATE TABLE provas (data VARCHAR(255), turma VARCHAR(255), sequencia VARCHAR(255), comentario VARCHAR(255))")

@@ -210,6 +210,22 @@ def screenteacher(nome, formacao):
     if choise == 1:
         return avisos()
 
+    if choise == 3:
+        #sequencia da prova, turma, dia da prova, comentário
+        turma = input("Para qual turma será aplicada a prova: ")
+        turma = turma.upper()
+        turma = turma.replace(' ', '')
+        prova = input("Digite o dia da prova: ")
+        sequen = input("Digite a sequencia da prova (primeira, segunda)")
+        comentario = input("Comentário: ")
+
+        query3 = "INSERT INTO provas(data, turma, sequencia, comentario) VALUES (%s, %s, %s, %s)"
+        values3 = (prova, turma, sequen, comentario)
+
+        cursor.execute(query3, values3)
+        db.commit()
+        print(cursor.rowcount, "Record Inserted")        
+
     if choise == 5:
         query2 = "SELECT * FROM student"
         cursor.execute(query2)
