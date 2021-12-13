@@ -177,6 +177,18 @@ def screenstudent(nome, turma, id):
             aviso = record[x][1]
             print("Data: ", data , "- Aviso: ", aviso)
 
+    if escolha == 3:
+        query3 = "SELECT data, sequencia, comentario FROM provas WHERE turma = %s"
+        values3 = (turma,)
+
+        cursor.execute(query3, values3)
+        record = cursor.fetchall()
+        for x in range(len(record)):
+            data = record[x][0]
+            sequencia = record[x][1]
+            comentario = record[x][2]
+            print("Data da prova: ", data , " - Sequência: ", sequencia , "- Comentário: ", comentario)
+
 
 def avisos():
     print("\nDigite seu aviso!")
