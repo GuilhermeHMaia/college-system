@@ -141,9 +141,31 @@ def adminscreen():
     return adminscreen()
 
 
-def screenstudent(nome):   
+def screenstudent(nome, turma, id):   
     print("\nWelcome the student screen")
+    print("(1) Ver notas")
+    print("(2) Avisos")
+    print("(3) ver data de provas")
+    escolha = int(input(""))
+    nome = nome
+    turma = turma
+    id = id
     # coisas como, ver nota, com desempenho, ver presença, avisos, data das provas, horário aulas.
+
+    if escolha == 1:
+        query = "SELECT data, nota, sequencia, materia, comentariO FROM notas WHERE id = %s"
+        values = (id,)
+
+        cursor.execute(query, values)
+        record = cursor.fetchall()
+        print(record)
+
+
+
+        
+        
+
+
 
 def avisos():
     print("\nDigite seu aviso!")
@@ -188,10 +210,6 @@ def nota(materia):
     print(cursor.rowcount, "Record inserted")
 
     
-
-
-    
-
 def screenteacher(nome, formacao):
     #coisas como, adicionar nota, presença, avisos, data de provas, consultar ficha de aluno
     print("\nWelcome the teacher screen")   
@@ -246,11 +264,6 @@ def screenteacher(nome, formacao):
         breakpoint
 
 
-
-              
-
-
-
 def login():
     print("\nFaça o login no sistema")
     nome = input("Digite seu nome: ")
@@ -262,14 +275,16 @@ def login():
         return adminscreen()
 
     if fun == 1:
-        query = "SELECT name, password FROM student"
+        query = "SELECT name, password, turma, id FROM student"
         cursor.execute(query)
         record= cursor.fetchall()
 
         for linha in record:
             if nome == linha[0]:
                 if linha[1] == password:
-                    return screenstudent(nome)
+                    turma = linha[2]
+                    id = linha[3]
+                    return screenstudent(nome, turma, id)
 
     if fun == 2:
         query2 = "SELECT name, password, formacao FROM teacher"
