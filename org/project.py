@@ -158,25 +158,40 @@ def screenstudent(nome, turma, id):
 
         cursor.execute(query, values)
         record = cursor.fetchall()
-        print(record)
+        for x in range(len(record)):
+            data = record[x][0]
+            nota = record[x][1]
+            sequencia = record[x][2]
+            materia = record[x][3]
+            comentario = record[x][4]
+            print(" Dia: ", data ,", Matéria: ", materia  ,", Sequencia", sequencia  ,", Nota: ", nota  ,", Comentários: ", comentario)
 
+    if escolha == 2:
+        query2 = "SELECT data, aviso FROM avisos WHERE turma = %s"
+        values2 = (turma, )
 
-
-        
-        
-
+        cursor.execute(query2, values2)
+        record = cursor.fetchall()
+        for x in range(len(record)):
+            data = record[x][0]
+            aviso = record[x][1]
+            print("Data: ", data , "- Aviso: ", aviso)
 
 
 def avisos():
     print("\nDigite seu aviso!")
     aviso = input(":")
+    turma = input("Digite a turma: ")
+    turma = turma.upper()
+    turma = turma.replace(' ', '')
     data = date.today()
-    #data = str(mu)
+    
+    #Colocar a turma do aviso
 
     print(aviso)
     print(data)
-    query = "INSERT INTO avisos(data, aviso) VALUES ( %s, %s)"
-    values = (data, aviso)
+    query = "INSERT INTO avisos(data, aviso, turma) VALUES ( %s, %s, %s)"
+    values = (data, aviso, turma)
 
     cursor.execute(query, values)
     db.commit()
