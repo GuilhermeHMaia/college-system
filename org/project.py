@@ -1,4 +1,5 @@
 
+from logging import log
 import mysql.connector as mysql
 from datetime import date
 from datetime import date
@@ -55,6 +56,7 @@ def adminscreen():
     print("\nADMINSCREEN")
     print("(1) Cadastrar professor")
     print("(2) Aprovar matriculas")
+    print("(3) Sair")
     escolha = int(input(""))
     #Fazer com que as escolhas levem a outras funções, como Cadprof()
     if escolha == 1:
@@ -78,6 +80,9 @@ def adminscreen():
 
 
 
+    if escolha == 3:
+        return inicio()
+    
     if escolha == 2:
         query = "SELECT insun, id , name, sunname, email, phone, agr, address FROM parents"
         cursor.execute(query)
@@ -140,12 +145,15 @@ def adminscreen():
     print("Não há mais pedidos de matricula")
     return adminscreen()
 
+    
 
-def screenstudent(nome, turma, id):   
+
+def studentscreen(nome, turma, id):   
     print("\nWelcome the student screen")
     print("(1) Ver notas")
     print("(2) Avisos")
     print("(3) ver data de provas")
+    print("(4) Sair")
     escolha = int(input(""))
     nome = nome
     turma = turma
@@ -165,6 +173,10 @@ def screenstudent(nome, turma, id):
             materia = record[x][3]
             comentario = record[x][4]
             print(" Dia: ", data ,", Matéria: ", materia  ,", Sequencia", sequencia  ,", Nota: ", nota  ,", Comentários: ", comentario)
+        
+        toque = input("")
+        if toque == '':
+            return studentscreen(nome, turma, id)
 
     if escolha == 2:
         query2 = "SELECT data, aviso FROM avisos WHERE turma = %s"
@@ -176,6 +188,9 @@ def screenstudent(nome, turma, id):
             data = record[x][0]
             aviso = record[x][1]
             print("Data: ", data , "- Aviso: ", aviso)
+        toque = input("")
+        if toque == '':
+            return studentscreen(nome, turma, id)
 
     if escolha == 3:
         query3 = "SELECT data, sequencia, comentario FROM provas WHERE turma = %s"
@@ -188,17 +203,20 @@ def screenstudent(nome, turma, id):
             sequencia = record[x][1]
             comentario = record[x][2]
             print("Data da prova: ", data , " - Sequência: ", sequencia , "- Comentário: ", comentario)
+        toque = input("")
+        if toque == '':
+            return studentscreen(nome, turma, id)
 
+    if escolha == 4:
+        return studentscreen(nome, turma, id)
 
-def avisos():
+def avisos(nome, formacao):
     print("\nDigite seu aviso!")
     aviso = input(":")
     turma = input("Digite a turma: ")
     turma = turma.upper()
     turma = turma.replace(' ', '')
     data = date.today()
-    
-    #Colocar a turma do aviso
 
     print(aviso)
     print(data)
@@ -208,8 +226,9 @@ def avisos():
     cursor.execute(query, values)
     db.commit()
     print(cursor.rowcount, "Record inserted")
+    return teacherscreen(nome, formacao)
 
-def nota(materia):
+def nota(nome,formacao):
     # escolha da turma, filtragem com nome e id,nota, data que a prova foi aplicada e sequência da prova ( primeira, segunda), comentario?
     turma = input("\nEscolha uma turma: ")
     prova = input("Digite o dia em que a prova foi aplicada")
@@ -229,15 +248,16 @@ def nota(materia):
         aluno = str(linha[0])
         mat = int(linha[1])
     
-    query2 = "INSERT INTO notas (id, data, name, nota, sequencia, turma, materia, comentario) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"
-    values2 = (mat, prova, aluno, nota, sequen, turma, materia, comentário)
+        query2 = "INSERT INTO notas (id, data, name, nota, sequencia, turma, materia, comentario) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"
+        values2 = (mat, prova, aluno, nota, sequen, turma, formacao, comentário)
 
-    cursor.execute(query2, values2)
-    db.commit()
-    print(cursor.rowcount, "Record inserted")
+        cursor.execute(query2, values2)
+        db.commit()
+        print(cursor.rowcount, "Record inserted")
+    return teacherscreen(nome, formacao)
 
     
-def screenteacher(nome, formacao):
+def teacherscreen(nome, formacao):
     #coisas como, adicionar nota, presença, avisos, data de provas, consultar ficha de aluno
     print("\nWelcome the teacher screen")   
     print("  Olá ", nome)
@@ -250,10 +270,10 @@ def screenteacher(nome, formacao):
     choise = int(input(""))
 
     if choise == 2:
-        return nota(formacao)
+        return nota(nome, formacao)
 
     if choise == 1:
-        return avisos()
+        return avisos(nome, formacao)
 
     if choise == 3:
         #sequencia da prova, turma, dia da prova, comentário
@@ -288,7 +308,7 @@ def screenteacher(nome, formacao):
                 print("Turma: ", linha[8])
 
     if choise == 6:
-        breakpoint
+        return inicio()
 
 
 def login():
@@ -297,6 +317,9 @@ def login():
     password = getpass.getpass("Digite sua senha: ")
     print("Escolhar uma permição")
     fun = int(input("(1) Student or (2) teacher or (3) Parents"))
+
+    #Criar as excessões
+    
 
     if nome == "Administrador" and password == "2121":
         return adminscreen()
@@ -311,7 +334,14 @@ def login():
                 if linha[1] == password:
                     turma = linha[2]
                     id = linha[3]
-                    return screenstudent(nome, turma, id)
+                    return studentscreen(nome, turma, id)
+
+                else:
+                    print("Senha errada")
+                    return login()
+            else:
+                print("Nome não encontrado")
+                return login()
 
     if fun == 2:
         query2 = "SELECT name, password, formacao FROM teacher"
@@ -322,7 +352,7 @@ def login():
             if nome == linha[0]:
                 if linha[1] == password:
                     formacao = linha[2]
-                    return screenteacher(nome, formacao)
+                    return teacherscreen(nome, formacao)
                 else:
                     print("Senha errada")
                     return login()
