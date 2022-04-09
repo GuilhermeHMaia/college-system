@@ -362,7 +362,7 @@ def login():
             
 
 def inicio():
-    print("Bem vindo ao sistema escolar")
+    print("Bem vindo ao sistemaa escolar")
     print("(1) Login")
     print("(2) Cadastro/Matricula")
     escolha = int(input("Escolha uma das opções: "))
