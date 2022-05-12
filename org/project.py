@@ -144,21 +144,18 @@ def adminscreen():
     return adminscreen()
 
     
+class studentscreen():
+    def __init__(self, nome, turma, id):
+        permi = [t.__name__ for t in studentscreen.__subclasses__()]
+        print("Escolha uma opção")
+        for i, t in enumerate(permi):
+            print(f'{i}) {t}')
+        escolha = int(input(""))
+        return studentscreen.__subclasses__()[escolha](nome, turma, id)
 
 
-def studentscreen(nome, turma, id):   
-    print("\nWelcome the student screen")
-    print("(1) Ver notas")
-    print("(2) Avisos")
-    print("(3) ver data de provas")
-    print("(4) Sair")
-    escolha = int(input(""))
-    nome = nome
-    turma = turma
-    id = id
-    # coisas como, ver nota, com desempenho, ver presença, avisos, data das provas, horário aulas.
-
-    if escolha == 1:
+class notas(studentscreen):
+    def __init__(self, nome, turma, id):
         query = "SELECT data, nota, sequencia, materia, comentariO FROM notas WHERE id = %s"
         values = (id,)
 
@@ -176,7 +173,8 @@ def studentscreen(nome, turma, id):
         if toque == '':
             return studentscreen(nome, turma, id)
 
-    if escolha == 2:
+class aviso(studentscreen):
+    def __init__(self, nome, turma, id):
         query2 = "SELECT data, aviso FROM avisos WHERE turma = %s"
         values2 = (turma, )
 
@@ -190,7 +188,9 @@ def studentscreen(nome, turma, id):
         if toque == '':
             return studentscreen(nome, turma, id)
 
-    if escolha == 3:
+
+class provas(studentscreen):
+    def __init__(self, nome, turma, id):
         query3 = "SELECT data, sequencia, comentario FROM provas WHERE turma = %s"
         values3 = (turma,)
 
@@ -205,8 +205,11 @@ def studentscreen(nome, turma, id):
         if toque == '':
             return studentscreen(nome, turma, id)
 
-    if escolha == 4:
-        return studentscreen(nome, turma, id)
+class sair(studentscreen):
+    def __init__(self, nome, turma, id):
+        return inicio()
+
+
 
 def avisos(nome, formacao):
     print("\nDigite seu aviso!")
