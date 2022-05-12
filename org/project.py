@@ -12,42 +12,39 @@ db = mysql.connect(host = "localhost",
                    )
 cursor = db.cursor()
 
-def cadunico():
-    print("\nPreencha os campos a seguir com seus dados e os dados do seu filho")
-    nome = input("Full name: ")
-    email = input("Email: ")
-    phone = int(input("Phone: "))
-    age = int(input("age: "))
-    address = input("address: ")
-    sunname = input("Sun name: ")
-    birth = input("Sun birth: ")
-    sunage = int(input("Sun age: "))
-    password = getpass.getpass("passaword: ")
-    sunpass = getpass.getpass("Sun password")
-    nome = nome.title()
-    sunname = sunname.title()
-    if nome=='' or email=='' or phone =='' or age=='' or address=='' or sunname=='' or birth=='' or password=='' or sunpass=='':
-        print("Todos os campos devem ser preenchidos")
-        return cadunico()
 
-    query = "INSERT INTO parents(name, sunname, email, phone, agr, address, password) VALUES(%s, %s, %s, %s, %s, %s, %s)"
-    values = (nome, sunname, email, phone, age, address, password)
+class Cadastro:     
 
-    cursor.execute(query, values)
-    db.commit()
-    print(cursor.rowcount, "record inserted")
+    def salvarbanco(values):
+        query = "INSERT INTO parents(name, sunname, email, phone, agr, address, password) VALUES(%s, %s, %s, %s, %s, %s, %s)"
+        values1 = (values[0], values[5], values[1], values[2], values[3], values[4], values[9])
 
-    
-    query2 = "INSERT INTO student(name, namepais, addres, birth, age, telpais, emailpais, password) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"
-    values2 = (sunname, nome, address, birth,sunage, phone, email, sunpass)
+        cursor.execute(query, values1)
+        db.commit()
+        print(cursor.rowcount, "record inserted")
 
-    cursor.execute(query2, values2)
-    db.commit()
-    print(cursor.rowcount, "record inserted")
+        query2 = "INSERT INTO student(name, namepais, addres, birth, age, telpais, emailpais, password) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"
+        values2 = (values[5], values[0], values[4], values[6], values[7], values[2], values[1], values[9])
 
+        cursor.execute(query2, values2)
+        db.commit()
+        print(cursor.rowcount, "record inserted")
 
+        
+    def cadastrar():
+        dic = {'name': None, 'email': None, 'phone': None, 'age': None, 'address': None, 'sun name': None, 'birth sun': None, 'sun age': None, 'password': None, 'sun password': None }
+        values = []
+        for i in dic:
+            v = input(i, " :")
+            dic[i] = v
+        if ('' in dic.values()):
+            print('complete todos os campos')
+            return Cadastro.cadastrar()
 
-    print(nome, email, phone, age, address, sunname, birth, password, sunpass)
+        for i in dic:
+            values.append(dic[i])
+        return Cadastro.salvarbanco(values)
+
 
 
 def adminscreen():
@@ -65,6 +62,7 @@ def adminscreen():
         idade = int(input("Idade do professor: "))
         email = input("email teacher: ")
         materia = input("Matéria a ser oferecida: ")
+        #opções pré estabelecidas 
         turmas = input("Turmas responsaveis: ")
         password = getpass.getpass("Password: ")
 
@@ -369,11 +367,14 @@ def inicio():
            
     
     if escolha == 2:
-        return cadunico()
+        return Cadastro.cadastrar()
     if escolha == 1:
         return login()
     if escolha != (1 or 2):
         print("Escolha entre uma das opções\n")
         return inicio()
 
+
+#Colocar as coisas para OPP
+#Bateria de teste (pyteste, seliniun)
 inicio()
