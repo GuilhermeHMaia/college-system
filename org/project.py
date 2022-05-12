@@ -308,26 +308,27 @@ def teacherscreen(nome, formacao):
     if choise == 6:
         return inicio()
 
+class Login:
+    def login():
+        print("\n LOGIN  ")
+        nome = input("Nome: ")
+        password = input("Password: ")
+        permi = [t.__name__ for t in Login.__subclasses__()]
+        print("Escolha uma permição")
+        for i, t in enumerate(permi):
+            print(f'{i}) {t}')
+        permição = int(input('Permição : '))
+        return Login.__subclasses__()[permição](nome, password)
+     
 
-def login():
-    print("\nFaça o login no sistema")
-    nome = input("Digite seu nome: ")
-    password = getpass.getpass("Digite sua senha: ")
-    print("Escolhar uma permição")
-    fun = int(input("(1) Student or (2) teacher or (3) Parents"))
-
-    #Criar as excessões
-    
-
-    if nome == "Administrador" and password == "2121":
-        return adminscreen()
-
-    if fun == 1:
+class student(Login):
+    def __init__(self, nome, password):
         query = "SELECT name, password, turma, id FROM student"
         cursor.execute(query)
         record= cursor.fetchall()
 
         for linha in record:
+            print(linha)
             if nome == linha[0]:
                 if linha[1] == password:
                     turma = linha[2]
@@ -336,12 +337,13 @@ def login():
 
                 else:
                     print("Senha errada")
-                    return login()
-            else:
-                print("Nome não encontrado")
-                return login()
+                    return Login.login()
+        else:
+            print("Nome não encontrado")
+            return Login.login()
 
-    if fun == 2:
+class professor(Login):
+    def __init__(self, nome, password):
         query2 = "SELECT name, password, formacao FROM teacher"
         cursor.execute(query2)
         record2 = cursor.fetchall()
@@ -353,10 +355,10 @@ def login():
                     return teacherscreen(nome, formacao)
                 else:
                     print("Senha errada")
-                    return login()
-            else:
-                print("Nome não encontrado")
-                return login()
+                    return Login.login()
+        else:
+            print("Nome não encontrado")
+            return Login.login()
             
 
 def inicio():
@@ -369,12 +371,11 @@ def inicio():
     if escolha == 2:
         return Cadastro.cadastrar()
     if escolha == 1:
-        return login()
+        return Login.login()
     if escolha != (1 or 2):
         print("Escolha entre uma das opções\n")
         return inicio()
 
 
-#Colocar as coisas para OPP
 #Bateria de teste (pyteste, seliniun)
 inicio()
