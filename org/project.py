@@ -45,8 +45,6 @@ class Cadastro:
             values.append(dic[i])
         return Cadastro.salvarbanco(values)
 
-
-
 class adminscreen():
     def __init__():
         permi = [t.__name__ for t in adminscreen.__subclasses__()]
@@ -147,7 +145,6 @@ class sair(adminscreen):
     def __init__(self):
         return inicio()
 
-
 class studentscreen():
     def __init__(self, nome, turma, id):
         permi = [t.__name__ for t in studentscreen.__subclasses__()]
@@ -156,7 +153,6 @@ class studentscreen():
             print(f'{i}) {t}')
         escolha = int(input(""))
         return studentscreen.__subclasses__()[escolha](nome, turma, id)
-
 
 class notas(studentscreen):
     def __init__(self, nome, turma, id):
@@ -192,7 +188,6 @@ class aviso(studentscreen):
         if toque == '':
             return studentscreen(nome, turma, id)
 
-
 class provas(studentscreen):
     def __init__(self, nome, turma, id):
         query3 = "SELECT data, sequencia, comentario FROM provas WHERE turma = %s"
@@ -212,75 +207,68 @@ class provas(studentscreen):
 class sair(studentscreen):
     def __init__(self, nome, turma, id):
         return inicio()
-
-
-
-def avisos(nome, formacao):
-    print("\nDigite seu aviso!")
-    aviso = input(":")
-    turma = input("Digite a turma: ")
-    turma = turma.upper()
-    turma = turma.replace(' ', '')
-    data = date.today()
-
-    print(aviso)
-    print(data)
-    query = "INSERT INTO avisos(data, aviso, turma) VALUES ( %s, %s, %s)"
-    values = (data, aviso, turma)
-
-    cursor.execute(query, values)
-    db.commit()
-    print(cursor.rowcount, "Record inserted")
-    return teacherscreen(nome, formacao)
-
-def nota(nome,formacao):
-    # escolha da turma, filtragem com nome e id,nota, data que a prova foi aplicada e sequência da prova ( primeira, segunda), comentario?
-    turma = input("\nEscolha uma turma: ")
-    prova = input("Digite o dia em que a prova foi aplicada")
-    sequen = input("Digite a ordem da prova, (Primeira, Segunda ...")
-    turma = turma.upper()
-    turma = turma.replace(' ', '')
-    print(turma)
-    query = "SELECT name, id FROM student WHERE turma = %s"
-    values = (turma, )
-
-    cursor.execute(query, values)
-    record = cursor.fetchall()
-    for linha in record:
-        print("Aluno: ", linha[0])
-        nota = int(input("Digite a nota do aluno :"))
-        comentário = input("Digite um comentário: ")
-        aluno = str(linha[0])
-        mat = int(linha[1])
+   
+class teacherscreen():
+    def __init__(self, nome, formacao):
+    #coisas como, adicionar nota, presença, avisos, data de provas, consultar ficha de aluno
+        permi = [t.__name__ for t in teacherscreen.__subclasses__()]
+        print("Escolha uma opção")
+        for i, t in enumerate(permi):
+            print(f'{i}) {t}')
+        escolha = int(input(""))
+        return teacherscreen.__subclasses__()[escolha](nome, formacao)
     
-        query2 = "INSERT INTO notas (id, data, name, nota, sequencia, turma, materia, comentario) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"
-        values2 = (mat, prova, aluno, nota, sequen, turma, formacao, comentário)
+class notas(teacherscreen):
+    def __init__(self, nome, formacao):
+    
+    # escolha da turma, filtragem com nome e id,nota, data que a prova foi aplicada e sequência da prova ( primeira, segunda), comentario?
+        turma = input("\nEscolha uma turma: ")
+        prova = input("Digite o dia em que a prova foi aplicada")
+        sequen = input("Digite a ordem da prova, (Primeira, Segunda ...")
+        turma = turma.upper()
+        turma = turma.replace(' ', '')
+        print(turma)
+        query = "SELECT name, id FROM student WHERE turma = %s"
+        values = (turma, )
 
-        cursor.execute(query2, values2)
+        cursor.execute(query, values)
+        record = cursor.fetchall()
+        for linha in record:
+            print("Aluno: ", linha[0])
+            nota = int(input("Digite a nota do aluno :"))
+            comentário = input("Digite um comentário: ")
+            aluno = str(linha[0])
+            mat = int(linha[1])
+    
+            query2 = "INSERT INTO notas (id, data, name, nota, sequencia, turma, materia, comentario) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"
+            values2 = (mat, prova, aluno, nota, sequen, turma, formacao, comentário)
+
+            cursor.execute(query2, values2)
+            db.commit()
+            print(cursor.rowcount, "Record inserted")
+        return teacherscreen(nome, formacao)
+
+class avisos(teacherscreen):
+    def __init__(self, nome, formacao):
+        print("\nDigite seu aviso!")
+        aviso = input(":")
+        turma = input("Digite a turma: ")
+        turma = turma.upper()
+        turma = turma.replace(' ', '')
+        data = date.today()
+
+        print(aviso)
+        print(data)
+        query = "INSERT INTO avisos(data, aviso, turma) VALUES ( %s, %s, %s)"
+        values = (data, aviso, turma)
+
+        cursor.execute(query, values)
         db.commit()
         print(cursor.rowcount, "Record inserted")
-    return teacherscreen(nome, formacao)
+        return teacherscreen(nome, formacao)
 
-    
-def teacherscreen(nome, formacao):
-    #coisas como, adicionar nota, presença, avisos, data de provas, consultar ficha de aluno
-    print("\nWelcome the teacher screen")   
-    print("  Olá ", nome)
-    print("(1) Adicionar aviso")
-    print("(2) Adiconar notas")
-    print("(3) Adicionar data de provas")
-    print("(4) Adiconar presença")
-    print("(5) Consultar ficha de aluno")
-    print("(6) Exit")
-    choise = int(input(""))
-
-    if choise == 2:
-        return nota(nome, formacao)
-
-    if choise == 1:
-        return avisos(nome, formacao)
-
-    if choise == 3:
+class prova(teacherscreen):
+    def __init__(self, nome, formacao):
         #sequencia da prova, turma, dia da prova, comentário
         turma = input("Para qual turma será aplicada a prova: ")
         turma = turma.upper()
@@ -296,7 +284,8 @@ def teacherscreen(nome, formacao):
         db.commit()
         print(cursor.rowcount, "Record Inserted")        
 
-    if choise == 5:
+class FichaAluno(teacherscreen):
+    def __init__(self, nome, formacao):
         query2 = "SELECT * FROM student"
         cursor.execute(query2)
         record = cursor.fetchall()
@@ -312,7 +301,8 @@ def teacherscreen(nome, formacao):
                 print("Contato: ", linha[6])
                 print("Turma: ", linha[8])
 
-    if choise == 6:
+class sair(teacherscreen):
+    def __init__(self, nome, formacao):
         return inicio()
 
 class Login:
@@ -329,7 +319,6 @@ class Login:
         permição = int(input('Permição : '))
         return Login.__subclasses__()[permição](nome, password)
      
-
 class student(Login):
     def __init__(self, nome, password):
         query = "SELECT name, password, turma, id FROM student"
@@ -369,7 +358,6 @@ class professor(Login):
             print("Nome não encontrado")
             return Login.login()
             
-
 def inicio():
     print("Bem vindo ao sistemaa escolar")
     print("(1) Login")
