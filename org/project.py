@@ -47,41 +47,41 @@ class Cadastro:
 
 
 
-def adminscreen():
-    
-    
-    print("\nADMINSCREEN")
-    print("(1) Cadastrar professor")
-    print("(2) Aprovar matriculas")
-    print("(3) Sair")
-    escolha = int(input(""))
-    #Fazer com que as escolhas levem a outras funções, como Cadprof()
-    if escolha == 1:
-        print("\nEntre com os dados cadastrais do professor")
-        name = input("Nome do professor: ")
-        idade = int(input("Idade do professor: "))
-        email = input("email teacher: ")
-        materia = input("Matéria a ser oferecida: ")
-        #opções pré estabelecidas 
-        turmas = input("Turmas responsaveis: ")
-        password = getpass.getpass("Password: ")
+class adminscreen():
+    def __init__():
+        permi = [t.__name__ for t in adminscreen.__subclasses__()]
+        print("Escolha uma opção")
+        for i, t in enumerate(permi):
+            print(f'{i}) {t}')
+        escolha = int(input(""))
+        return adminscreen.__subclasses__()[escolha]()
 
-        if name == '' or idade =='' or materia =='' or turmas =='' or password =='':
-            print("Todos os campos devem ser preenchidos")
-            return adminscreen()
+class SaveCadProf():
+    def __init__(dados):
         query4 = "INSERT INTO teacher(name, age, password, formacao, email, turma) VALUES(%s, %s, %s, %s, %s, %s) "
-        values4 = (name, idade, password, materia, email, turmas)
+        values4 = (dados[0], dados[1], dados[5], dados[3], dados[2], dados[4])
 
         cursor.execute(query4, values4)
         db.commit()
         print(cursor.rowcount, "record inserted")
 
+class CadProf(adminscreen):
+    def __init__(self):
+        dadoprof = {'name': None, 'idade': None, 'email': None, 'materia': None, 'turmas':[], 'password': None}
+        dados = []
+        for i in dadoprof:
+            v = input(i, " :")
+            dadoprof[i] = v
+        if ('' in dadoprof.values()):
+            print('complete todos os campos')
+        return CadProf()
 
+        for i in dadoprof:
+            dados.append(dadoprof[i])
+        return SaveCadProf(dados)
 
-    if escolha == 3:
-        return inicio()
-    
-    if escolha == 2:
+class AprovaMatri(adminscreen):
+    def __init__(self):
         query = "SELECT insun, id , name, sunname, email, phone, agr, address FROM parents"
         cursor.execute(query)
         record = cursor.fetchall()
@@ -140,10 +140,14 @@ def adminscreen():
                     db.commit()
                     print(cursor.rowcount, "record inserted") 
 
-    print("Não há mais pedidos de matricula")
-    return adminscreen()
+        print("Não há mais pedidos de matricula")
+        return adminscreen()
 
-    
+class sair(adminscreen):
+    def __init__(self):
+        return inicio()
+
+
 class studentscreen():
     def __init__(self, nome, turma, id):
         permi = [t.__name__ for t in studentscreen.__subclasses__()]
@@ -316,6 +320,8 @@ class Login:
         print("\n LOGIN  ")
         nome = input("Nome: ")
         password = input("Password: ")
+        if nome == "Administrador" and password == 12345:
+            return adminscreen 
         permi = [t.__name__ for t in Login.__subclasses__()]
         print("Escolha uma permição")
         for i, t in enumerate(permi):
